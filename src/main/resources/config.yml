@@ -1,0 +1,6 @@
+mysql:
+  server: localhost
+  username: root
+  password: 
+  base: creeperslab
+server-id: server

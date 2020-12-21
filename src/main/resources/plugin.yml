@@ -1,0 +1,6 @@
+name: IOServerMonitor
+main: com.interordi.ioservermonitor.IOServerMonitor
+version: 1.0
+api-version: 1.13
+
+commands:
