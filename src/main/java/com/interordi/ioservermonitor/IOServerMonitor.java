@@ -1,5 +1,10 @@
 package com.interordi.ioservermonitor;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import com.interordi.ioservermonitor.utilities.Lag;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -10,6 +15,8 @@ public class IOServerMonitor extends JavaPlugin {
 	public DataAccess data;
 	public StatusMonitor monitor;
 	int lagTask;
+	private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	private static ScheduledFuture<?> updaterHandle;
 
 
 	public void onEnable() {
@@ -33,7 +40,9 @@ public class IOServerMonitor extends JavaPlugin {
 			monitor = new StatusMonitor(this, data);
 			
 			lagTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
-			getServer().getScheduler().runTaskTimer(this, monitor, 60*20L, 60*20L);	//Run every minute
+
+			//Use Java scheduler instead of Bukkit so the data keeps being saved despite the server slowing down
+			updaterHandle = scheduler.scheduleAtFixedRate(monitor, 60, 60, TimeUnit.SECONDS);
 		}
 		
 		getLogger().info("IOServerMonitor enabled");
@@ -41,6 +50,8 @@ public class IOServerMonitor extends JavaPlugin {
 	
 	
 	public void onDisable() {
+		if (updaterHandle != null)
+			updaterHandle.cancel(true);
 		getServer().getScheduler().cancelTask(lagTask);
 		getLogger().info("IOServerMonitor disabled");
 	}
