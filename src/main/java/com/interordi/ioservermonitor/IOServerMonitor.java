@@ -9,6 +9,7 @@ public class IOServerMonitor extends JavaPlugin {
 
 	public DataAccess data;
 	public StatusMonitor monitor;
+	int lagTask;
 
 
 	public void onEnable() {
@@ -31,7 +32,7 @@ public class IOServerMonitor extends JavaPlugin {
 			data = new DataAccess(this, dbServer, dbUsername, dbPassword, dbBase, serverId);
 			monitor = new StatusMonitor(this, data);
 			
-			getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
+			lagTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
 			getServer().getScheduler().runTaskTimer(this, monitor, 60*20L, 60*20L);	//Run every minute
 		}
 		
@@ -40,8 +41,7 @@ public class IOServerMonitor extends JavaPlugin {
 	
 	
 	public void onDisable() {
-		if (monitor != null)
-			monitor.run();	//Save the current data before stopping
+		getServer().getScheduler().cancelTask(lagTask);
 		getLogger().info("IOServerMonitor disabled");
 	}
 	
