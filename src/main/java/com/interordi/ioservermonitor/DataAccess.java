@@ -25,7 +25,7 @@ public class DataAccess {
 	
 	
 	//Do this on a separate thread to avoid slowdown
-	public void save(double tps) {
+	public void save(double tps, int nbPlayers, int maxPlayers, String plugins, String players) {
 
 		Connection conn = null;
 		String query = "";
@@ -35,15 +35,24 @@ public class DataAccess {
 			conn = DriverManager.getConnection(database);
 			
 			PreparedStatement pstmt = conn.prepareStatement("" +
-					"INSERT INTO " + this.tablePrefix + "servers (id, tps, last_check)" + 
-					"VALUES (?, ?, ?) " +
-					"ON DUPLICATE KEY UPDATE tps = ?, last_check = ?");
+					"INSERT INTO " + this.tablePrefix + "servers (id, tps, nb_players, max_players, plugins, players, last_check)" + 
+					"VALUES (?, ?, ?, ?, ?, ?, ?) " +
+					"ON DUPLICATE KEY UPDATE tps = ?, nb_players = ?, max_players = ?, plugins = ?, players = ?, last_check = ?");
 
 			pstmt.setString(1, serverId);
 			pstmt.setDouble(2, tps);
-			pstmt.setString(3, dateTime.toString());
-			pstmt.setDouble(4, tps);
-			pstmt.setString(5, dateTime.toString());
+			pstmt.setInt(3, nbPlayers);
+			pstmt.setInt(4, maxPlayers);
+			pstmt.setString(5, plugins);
+			pstmt.setString(6, players);
+			pstmt.setString(7, dateTime.toString());
+			
+			pstmt.setDouble(8, tps);
+			pstmt.setInt(9, nbPlayers);
+			pstmt.setInt(10, maxPlayers);
+			pstmt.setString(11, plugins);
+			pstmt.setString(12, players);
+			pstmt.setString(13, dateTime.toString());
 			
 			@SuppressWarnings("unused")
 			int res = pstmt.executeUpdate();
