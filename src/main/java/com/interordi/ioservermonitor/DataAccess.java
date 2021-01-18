@@ -22,6 +22,43 @@ public class DataAccess {
 		
 		database = "jdbc:mysql://" + dbServer + "/" + dbBase + "?user=" + dbUsername + "&password=" + dbPassword + "&useSSL=false";
 	}
+
+
+	//Initialize the database
+	public boolean init() {
+
+		//Create the required database table
+		//A failure indicates that the database wasn't configured properly
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String query = "";
+		
+		try {
+			conn = DriverManager.getConnection(database);
+			
+			pstmt = conn.prepareStatement("" +
+				"CREATE TABLE IF NOT EXISTS `stats_io_servers` ( " +
+				"	`id` varchar(20) NOT NULL, " +
+				"	`tps` decimal(4,2) NOT NULL, " +
+				"	`nb_players` int(11) NOT NULL DEFAULT 0, " +
+				"	`max_players` int(11) NOT NULL DEFAULT 0, " +
+				"	`plugins` text NOT NULL DEFAULT '', " +
+				"	`players` text NOT NULL DEFAULT '', " +
+				"	`last_check` datetime NOT NULL, " +
+				"	PRIMARY KEY (`id`) " +
+				") ENGINE=InnoDB DEFAULT CHARSET=latin1; "
+			);
+			pstmt.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println("Query: " + query);
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+			return false;
+		}
+
+		return true;
+	}
 	
 	
 	//Do this on a separate thread to avoid slowdown

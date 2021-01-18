@@ -37,6 +37,15 @@ public class IOServerMonitor extends JavaPlugin {
 		//Save every minute
 		if (enable) {
 			data = new DataAccess(this, dbServer, dbUsername, dbPassword, dbBase, serverId);
+			if (!data.init()) {
+				System.err.println("---------------------------------");
+				System.err.println("Failed to initialize the database");
+				System.err.println("Make sure to configure config.yml");
+				System.err.println("---------------------------------");
+				enable = false;
+				return;
+			}
+			
 			monitor = new StatusMonitor(this, data);
 			
 			lagTask = getServer().getScheduler().scheduleSyncRepeatingTask(this, new Lag(), 100L, 1L);
