@@ -3,6 +3,7 @@ package com.interordi.ioservermonitor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class DataAccess {
 	//Initialize the database
 	public boolean init() {
 
-		//Create the required database table
+		//Create or update the required database table
 		//A failure indicates that the database wasn't configured properly
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -44,11 +45,48 @@ public class DataAccess {
 				"	`max_players` int(11) NOT NULL DEFAULT 0, " +
 				"	`plugins` text NOT NULL DEFAULT '', " +
 				"	`players` text NOT NULL DEFAULT '', " +
+				"	`last_start` datetime NOT NULL, " +
 				"	`last_check` datetime NOT NULL, " +
 				"	PRIMARY KEY (`id`) " +
 				") ENGINE=InnoDB DEFAULT CHARSET=latin1; "
 			);
 			pstmt.executeUpdate();
+
+
+			//Check for the last_start field and add as needed
+			pstmt = conn.prepareStatement("" +
+				"SELECT * " +
+				"FROM information_schema.COLUMNS " +
+				"WHERE TABLE_NAME = 'stats_io_servers' " +
+				"  AND COLUMN_NAME = 'last_start' "
+			);
+			ResultSet rs = pstmt.executeQuery();
+
+			if (!rs.next()) {
+				pstmt = conn.prepareStatement("" +
+					"ALTER TABLE `stats_io_servers` " +
+					"CHANGE `tps` `tps` decimal(4,2) NOT NULL DEFAULT '0' AFTER `id`, " +
+					"CHANGE `last_check` `last_check` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' AFTER `players`, " +
+					"ADD `last_start` datetime NOT NULL DEFAULT '1970-01-01 00:00:00' AFTER `players` "
+				);
+				pstmt.executeUpdate();
+			}
+
+
+			//Set the server start time
+			pstmt = conn.prepareStatement("" +
+					"INSERT INTO " + this.tablePrefix + "servers (id, last_start)" + 
+					"VALUES (?, ?) " +
+					"ON DUPLICATE KEY UPDATE last_start = ?");
+
+			pstmt.setString(1, serverId);
+			pstmt.setString(2, LocalDateTime.now().toString());
+			
+			pstmt.setString(3, LocalDateTime.now().toString());
+			
+			@SuppressWarnings("unused")
+			int res = pstmt.executeUpdate();
+
 		} catch (SQLException ex) {
 			System.out.println("Query: " + query);
 			System.out.println("SQLException: " + ex.getMessage());
