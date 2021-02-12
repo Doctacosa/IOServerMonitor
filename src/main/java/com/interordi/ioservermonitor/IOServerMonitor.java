@@ -26,11 +26,11 @@ public class IOServerMonitor extends JavaPlugin {
 		boolean enable = true;
 
 		//Configuration file use (config.yml): http://wiki.bukkit.org/Configuration_API_Reference
-		String dbHost = this.getConfig().getString("database.host");
-		int dbPort = this.getConfig().getInt("database.port");
-		String dbUsername = this.getConfig().getString("database.username");
-		String dbPassword = this.getConfig().getString("database.password");
-		String dbBase = this.getConfig().getString("database.base");
+		String dbHost = this.getConfig().getString("database.host", null);
+		int dbPort = this.getConfig().getInt("database.port", 3306);
+		String dbUsername = this.getConfig().getString("database.username", null);
+		String dbPassword = this.getConfig().getString("database.password", null);
+		String dbBase = this.getConfig().getString("database.base", null);
 
 		//Old config format
 		if (dbHost == null)
