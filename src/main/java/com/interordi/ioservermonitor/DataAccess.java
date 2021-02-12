@@ -17,11 +17,11 @@ public class DataAccess {
 	private String serverId = "";
 	
 
-	DataAccess(IOServerMonitor plugin, String dbServer, String dbUsername, String dbPassword, String dbBase, String serverId) {
+	DataAccess(IOServerMonitor plugin, String dbHost, int dbPort, String dbUsername, String dbPassword, String dbBase, String serverId) {
 		this.plugin = plugin;
 		this.serverId = serverId;
 		
-		database = "jdbc:mysql://" + dbServer + "/" + dbBase + "?user=" + dbUsername + "&password=" + dbPassword + "&useSSL=false";
+		database = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbBase + "?user=" + dbUsername + "&password=" + dbPassword + "&useSSL=false";
 	}
 
 
