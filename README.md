@@ -4,11 +4,11 @@ Monitor the performance of a Minecraft server by saving some values in a MySQL d
 
 ## Configuration
 
-`mysql.host`: Database host  
-`mysql.port`: Database port  
-`mysql.user`: Database username  
-`mysql.pass`: Database password  
-`mysql.database`: Database name  
+`database.host`: Database host  
+`database.port`: Database port  
+`database.base`: Database name  
+`database.username`: Database username  
+`database.password`: Database password  
 `server-id`: A unique ID for this server
 
 
