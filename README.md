@@ -1,4 +1,7 @@
 # IOServerMonitor
+
+![Logo](https://www.interordi.com/images/plugins/ioservermonitor-96.png)
+
 Monitor the performance of a Minecraft server by saving some values in a MySQL database.
 
 
