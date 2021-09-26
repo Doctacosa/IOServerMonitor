@@ -8,9 +8,11 @@ import java.sql.SQLException;
 
 import java.time.LocalDateTime;
 
+import org.bukkit.Bukkit;
+
 public class DataAccess {
 
-	 @SuppressWarnings("unused")
+	@SuppressWarnings("unused")
 	private IOServerMonitor plugin;
 	private String database = "";
 	private String tablePrefix = "stats_io_";
@@ -88,10 +90,10 @@ public class DataAccess {
 			int res = pstmt.executeUpdate();
 
 		} catch (SQLException ex) {
-			System.out.println("Query: " + query);
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			Bukkit.getLogger().severe("Query: " + query);
+			Bukkit.getLogger().severe("SQLException: " + ex.getMessage());
+			Bukkit.getLogger().severe("SQLState: " + ex.getSQLState());
+			Bukkit.getLogger().severe("VendorError: " + ex.getErrorCode());
 			return false;
 		}
 
@@ -137,10 +139,10 @@ public class DataAccess {
 			
 		} catch (SQLException ex) {
 			// handle any errors
-			System.out.println("Query: " + query);
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("VendorError: " + ex.getErrorCode());
+			Bukkit.getLogger().severe("Query: " + query);
+			Bukkit.getLogger().severe("SQLException: " + ex.getMessage());
+			Bukkit.getLogger().severe("SQLState: " + ex.getSQLState());
+			Bukkit.getLogger().severe("VendorError: " + ex.getErrorCode());
 		}
 	}
 }
