@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.interordi.ioservermonitor.utilities.Lag;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -67,6 +68,10 @@ public class IOServerMonitor extends JavaPlugin {
 			updaterHandle = scheduler.scheduleAtFixedRate(monitor, 60, 60, TimeUnit.SECONDS);
 		}
 		
+		//Enable metrics
+		@SuppressWarnings("unused")
+		Metrics metrics = new Metrics(this, 32024);
+
 		getLogger().info("IOServerMonitor enabled");
 	}
 	
